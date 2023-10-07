@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.ackerman.foodappme.presentation.home.HomeFragment"
+        android:name="com.ackerman.foodappme.presentation.feature.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.ackerman.foodappme.presentation.cart.CartFragment"
-        android:label="@string/title_dashboard"
+        android:id="@+id/navigation_cart"
+        android:name="com.ackerman.foodappme.presentation.feature.cart.CartFragment"
+        android:label="@string/text_cart"
         tools:layout="@layout/fragment_cart" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.ackerman.foodappme.presentation.profile.ProfileFragment"
-        android:label="@string/title_notifications"
+        android:id="@+id/navigation_profile"
+        android:name="com.ackerman.foodappme.presentation.feature.profile.ProfileFragment"
+        android:label="@string/text_profile"
         tools:layout="@layout/fragment_profile" />
 </navigation>
