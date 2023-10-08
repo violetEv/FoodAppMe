@@ -20,4 +20,12 @@
     <string name="text_checkout">Checkout</string>
     <string name="text_total_price">Total price</string>
     <string name="text_cart_is_empty">Cart is Empty</string>
+    <string name="text_order_confirmation">Order Confirmation</string>
+    <string name="text_e_wallet">E Wallet</string>
+    <string name="text_total_payment">Total Payment</string>
+    <string name="text_btn_order">Order</string>
+    <string name="text_delivery_method">Delivery Method</string>
+    <string name="text_pick_up">Pick Up</string>
+    <string name="text_delivery">Delivery</string>
+    <string name="text_cash">Cash</string>
 </resources>

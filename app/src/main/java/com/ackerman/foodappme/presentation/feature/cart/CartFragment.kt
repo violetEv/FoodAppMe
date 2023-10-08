@@ -1,14 +1,14 @@
 package com.ackerman.foodappme.presentation.feature.cart
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Button
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import com.ackerman.foodappme.R
 import com.ackerman.foodappme.data.local.database.AppDatabase
 import com.ackerman.foodappme.data.local.database.datasource.CartDataSource
@@ -19,6 +19,7 @@ import com.ackerman.foodappme.databinding.FragmentCartBinding
 import com.ackerman.foodappme.model.Cart
 import com.ackerman.foodappme.presentation.common.CartListAdapter
 import com.ackerman.foodappme.presentation.common.CartListener
+import com.ackerman.foodappme.presentation.feature.checkout.CheckoutActivity
 import com.ackerman.foodappme.utils.GenericViewModelFactory
 import com.ackerman.foodappme.utils.hideKeyboard
 import com.ackerman.foodappme.utils.proceedWhen
@@ -69,7 +70,14 @@ class CartFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupList()
         observeData()
+        binding.btnCheckout.setOnClickListener {
+            navigateToCheckoutActivity()
+        }
+    }
 
+    private fun navigateToCheckoutActivity() {
+        val intent = Intent(requireContext(), CheckoutActivity::class.java)
+        startActivity(intent)
     }
 
     private fun setupList() {

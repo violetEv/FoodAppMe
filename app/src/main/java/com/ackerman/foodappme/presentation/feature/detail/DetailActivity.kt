@@ -60,7 +60,7 @@ class DetailActivity : AppCompatActivity() {
 
     private fun observeData() {
         viewModel.priceLiveData.observe(this) {
-            binding.tvMenuPrice.text = it.toCurrencyFormat()
+            binding.tvTotalPrice.text = it.toCurrencyFormat()
         }
         viewModel.menuCountLiveData.observe(this) {
             binding.tvMenuCount.text = it.toString()
