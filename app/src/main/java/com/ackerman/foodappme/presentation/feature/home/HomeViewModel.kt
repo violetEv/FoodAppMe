@@ -1,28 +1,12 @@
 package com.ackerman.foodappme.presentation.feature.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.ackerman.foodappme.data.dummy.DummyMenuDataSourceImpl
-import com.ackerman.foodappme.model.Menu
-import com.ackerman.foodappme.presentation.feature.home.adapter.AdapterLayoutMode
+import androidx.lifecycle.asLiveData
+import com.ackerman.foodappme.data.repository.MenuRepository
+import kotlinx.coroutines.Dispatchers
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel (private val repository: MenuRepository): ViewModel (){
 
-    private val _menuListLiveData = MutableLiveData<List<Menu>>()
-    val menuListLiveData: LiveData<List<Menu>>
-        get() = _menuListLiveData
+    val cartList = repository.getMenus().asLiveData(Dispatchers.IO)
 
-    private val _layoutModeLiveData = MutableLiveData<AdapterLayoutMode>()
-    val layoutModeLiveData: LiveData<AdapterLayoutMode>
-        get() = _layoutModeLiveData
-
-
-    fun updateMenuList(menuList: List<Menu>) {
-        _menuListLiveData.value = menuList
-    }
-
-    fun updateLayoutMode(layoutMode: AdapterLayoutMode) {
-        _layoutModeLiveData.value = layoutMode
-    }
 }
