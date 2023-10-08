@@ -2,6 +2,7 @@ package com.ackerman.foodappme.presentation.feature.checkout
 
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -42,6 +43,13 @@ class CheckoutActivity : AppCompatActivity() {
         setContentView(binding.root)
         setupList()
         observeData()
+        setClickListener()
+    }
+
+    private fun setClickListener() {
+        binding.btnCheckout.setOnClickListener {
+            Toast.makeText(this, "Order success !", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setupList() {
