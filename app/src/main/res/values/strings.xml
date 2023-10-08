@@ -28,4 +28,5 @@
     <string name="text_pick_up">Pick Up</string>
     <string name="text_delivery">Delivery</string>
     <string name="text_cash">Cash</string>
+    <string name="text_payment_method">Payment Method</string>
 </resources>
