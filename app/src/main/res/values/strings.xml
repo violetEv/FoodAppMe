@@ -3,4 +3,15 @@
     <string name="title_home">Home</string>
     <string name="title_cart">Cart</string>
     <string name="title_profile">Profile</string>
+    <string name="text_greeting">Hi, Ninda</string>
+    <string name="text_greeting2">What do you want to eat today?</string>
+    <string name="text_discount_30">Discount 30%</string>
+    <string name="text_banner_desc">Order menu via app and get your discount</string>
+    <string name="text_food_menu_list">Food menu list</string>
+    <string name="text_cart">Cart</string>
+    <string name="text_profile">Profile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_app_settings">App Settings</string>
+    <string name="text_dark_mode">Dark Mode</string>
 </resources>
