@@ -13,7 +13,6 @@ import com.ackerman.foodappme.data.dummy.DummyCategoryDataSourceImpl
 import com.ackerman.foodappme.data.dummy.DummyMenuDataSource
 import com.ackerman.foodappme.data.dummy.DummyMenuDataSourceImpl
 import com.ackerman.foodappme.databinding.FragmentHomeBinding
-import com.ackerman.foodappme.model.Category
 import com.ackerman.foodappme.model.Menu
 import com.ackerman.foodappme.presentation.feature.detail.DetailActivity
 import com.ackerman.foodappme.presentation.feature.home.adapter.AdapterLayoutMode
