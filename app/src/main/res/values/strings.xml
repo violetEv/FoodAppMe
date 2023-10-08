@@ -16,4 +16,8 @@
     <string name="text_app_settings">App Settings</string>
     <string name="text_dark_mode">Dark Mode</string>
     <string name="text_btn_add_to_cart">Add to cart</string>
+    <string name="text_add_notes_here">Add notes here</string>
+    <string name="text_checkout">Checkout</string>
+    <string name="text_total_price">Total price</string>
+    <string name="text_cart_is_empty">Cart is Empty</string>
 </resources>
