@@ -32,4 +32,6 @@
     <string name="text_password">Password</string>
     <string name="text_email">Email</string>
     <string name="text_no_telephone">No telephone</string>
+    <string name="text_payment_method">Payment Method</string>
+    <string name="text_home">Home</string>
 </resources>

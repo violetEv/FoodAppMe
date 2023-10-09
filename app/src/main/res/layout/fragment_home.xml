@@ -2,6 +2,7 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_home"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context=".presentation.feature.home.HomeFragment">
@@ -19,7 +20,9 @@
                     android:id="@+id/cl_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -176,17 +179,24 @@
                         android:layout_width="28dp"
                         android:layout_height="28dp"
                         android:layout_marginHorizontal="16dp"
-                        android:src="@drawable/ic_list"
+                        android:src="@drawable/ic_grid"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+                <include
+                    android:id="@+id/layout_state"
+                    layout="@layout/common_layout_content_state"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    app:layout_constraintTop_toTopOf="parent"/>
                 <!--listMenu-->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_list_menu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:visibility="gone"
                     android:nestedScrollingEnabled="true"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cl_title_list_menu"
@@ -194,5 +204,7 @@
                     tools:listitem="@layout/item_grid_list_menu"
                     tools:spanCount="2" />
             </LinearLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.core.widget.NestedScrollView>

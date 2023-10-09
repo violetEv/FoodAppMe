@@ -39,14 +39,14 @@ class DummyMenuDataSourceImpl() : DummyMenuDataSource {
             id = 5,
             name = "Cheese Burger",
             price = 30000.0,
-            imgMenuUrl = "https://raw.githubusercontent.com/violetEv/CH4-asset-code-challenge/main/menu_image/img_menu_cheese_burger.webp",
+            imgMenuUrl = "https://raw.githubusercontent.com/violetEv/CH4-asset-code-challenge/main/menu_image/img_menu_cheese_burger.jpg",
             desc = "A sandwich consisting of a beef patty, cheese, vegetables, and condiments, available in various flavor combinations and toppings."
         ),
         Menu(
             id = 6,
             name = "Pizza",
             price = 45000.0,
-            imgMenuUrl = "https://raw.githubusercontent.com/violetEv/CH4-asset-code-challenge/main/menu_image/img_menu_pizza.webp",
+            imgMenuUrl = "https://raw.githubusercontent.com/violetEv/CH4-asset-code-challenge/main/menu_image/img_menu_pizza.jpg",
             desc = "Pizza dough with an array of toppings such as cheese, tomato sauce, and various other ingredients, a popular choice for sharing."
         ),
         Menu(
@@ -60,7 +60,7 @@ class DummyMenuDataSourceImpl() : DummyMenuDataSource {
             id = 8,
             name = "Strawberry Milk",
             price = 15000.0,
-            imgMenuUrl = "https://raw.githubusercontent.com/violetEv/CH4-asset-code-challenge/main/menu_image/img_menu_strawberry_milk.webp",
+            imgMenuUrl = "https://raw.githubusercontent.com/violetEv/CH4-asset-code-challenge/main/menu_image/img_menu_strawberry_milk.jpg",
             desc = "A refreshing and sweet milk-based beverage infused with the flavor of ripe strawberries, commonly enjoyed as a dessert drink."
         )
     )

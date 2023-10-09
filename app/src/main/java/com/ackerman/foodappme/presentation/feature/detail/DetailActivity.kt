@@ -40,7 +40,20 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         bindMenu(viewModel.menu)
         observeData()
+        setCLick()
         setClickListener()
+    }
+
+    private fun setCLick() {
+        binding.clLocation.setOnClickListener{
+            navigateToGoogleMaps()
+        }
+    }
+
+    private fun navigateToGoogleMaps() {
+        val mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:-6.3016,$106.65337"))
+        mapIntent.setPackage("com.google.android.apps.maps")
+        startActivity(mapIntent)
     }
 
     private fun setClickListener() {
@@ -56,6 +69,7 @@ class DetailActivity : AppCompatActivity() {
         binding.btnAddToCart.setOnClickListener {
             viewModel.addToCart()
         }
+
     }
 
     private fun observeData() {
