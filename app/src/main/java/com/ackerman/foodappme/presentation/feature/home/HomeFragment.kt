@@ -5,20 +5,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ackerman.foodappme.R
+import com.ackerman.foodappme.data.dummy.DummyCategoryDataSource
 import com.ackerman.foodappme.data.dummy.DummyCategoryDataSourceImpl
 import com.ackerman.foodappme.data.dummy.DummyMenuDataSource
 import com.ackerman.foodappme.data.dummy.DummyMenuDataSourceImpl
+import com.ackerman.foodappme.data.local.database.AppDatabase
+import com.ackerman.foodappme.data.local.database.datasource.MenuDataSource
+import com.ackerman.foodappme.data.local.database.datasource.MenuDatabaseDataSource
+import com.ackerman.foodappme.data.repository.MenuRepository
+import com.ackerman.foodappme.data.repository.MenuRepositoryImpl
 import com.ackerman.foodappme.databinding.FragmentHomeBinding
-import com.ackerman.foodappme.model.Category
 import com.ackerman.foodappme.model.Menu
 import com.ackerman.foodappme.presentation.feature.detail.DetailActivity
 import com.ackerman.foodappme.presentation.feature.home.adapter.AdapterLayoutMode
 import com.ackerman.foodappme.presentation.feature.home.adapter.CategoryListAdapter
 import com.ackerman.foodappme.presentation.feature.home.adapter.MenuListAdapter
+import com.ackerman.foodappme.utils.GenericViewModelFactory
+import com.ackerman.foodappme.utils.proceedWhen
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -34,8 +43,8 @@ class HomeFragment : Fragment() {
             navigateToDetail(it)
         }
     }
-    private val adapterCategory : CategoryListAdapter by lazy {
-        CategoryListAdapter{
+    private val adapterCategory: CategoryListAdapter by lazy {
+        CategoryListAdapter {
             Toast.makeText(binding.root.context, it.name, Toast.LENGTH_SHORT).show()
         }
     }
@@ -44,14 +53,14 @@ class HomeFragment : Fragment() {
         DetailActivity.startActivity(requireContext(), menu)
     }
 
-//    private val viewModel: HomeViewModel by viewModels {
-//        val cds: DummyCategoryDataSource = DummyCategoryDataSourceImpl()
-//        val database = AppDatabase.getInstance(requireContext())
-//        val menuDao = database.menuDao()
-//        val productDataSource = MenuDatabaseDataSource(menuDao)
-//        val repo: MenuRepository = MenuRepositoryImpl(productDataSource, cds)
-//        GenericViewModelFactory.create(HomeViewModel(repo))
-//    }
+    private val viewModel: HomeViewModel by viewModels() {
+        val cds: DummyCategoryDataSource = DummyCategoryDataSourceImpl()
+        val database = AppDatabase.getInstance(requireContext())
+        val menuDao = database.menuDao()
+        val menuDataSource: MenuDataSource = MenuDatabaseDataSource(menuDao)
+        val repo: MenuRepository = MenuRepositoryImpl(menuDataSource, cds)
+        GenericViewModelFactory.create(HomeViewModel(repo))
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,11 +75,45 @@ class HomeFragment : Fragment() {
         setupList()
         showCategory()
         setupSwitch()
+        observeData()
+    }
+
+    private fun observeData() {
+        viewModel.menuList.observe(viewLifecycleOwner) {
+            it.proceedWhen(doOnSuccess = { result ->
+                binding.layoutState.root.isVisible = false
+                binding.layoutState.pbLoading.isVisible = false
+                binding.layoutState.tvError.isVisible = false
+                binding.rvListMenu.apply {
+                    isVisible = true
+                    adapter = this@HomeFragment.adapter
+                }
+                it.payload?.let { data-> adapter.submitData(data) }
+            }, doOnLoading = {
+                binding.layoutState.root.isVisible = true
+                binding.layoutState.pbLoading.isVisible = true
+                binding.layoutState.tvError.isVisible = false
+                binding.rvListMenu.isVisible = false
+            }, doOnError = { err ->
+                binding.layoutState.root.isVisible = true
+                binding.layoutState.pbLoading.isVisible = false
+                binding.layoutState.tvError.isVisible = true
+                binding.layoutState.tvError.text = err.exception?.message.orEmpty()
+                binding.rvListMenu.isVisible = false
+            }, doOnEmpty = { data ->
+                binding.layoutState.root.isVisible = true
+                binding.layoutState.pbLoading.isVisible = false
+                binding.layoutState.tvError.isVisible = true
+                binding.layoutState.tvError.text = getString(R.string.text_cart_is_empty)
+            }
+            )
+        }
     }
 
     private fun showCategory() {
         binding.rvCategory.adapter = adapterCategory
-        binding.rvCategory.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+        binding.rvCategory.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         adapterCategory.setData(dataSourceCategory.getMenuCategory())
     }
 
@@ -87,9 +130,9 @@ class HomeFragment : Fragment() {
     private fun setupSwitch() {
         binding.ivListMode.setOnClickListener() {
             val layoutMode =
-                if(adapter.adapterLayoutMode == AdapterLayoutMode.LINEAR) AdapterLayoutMode.GRID
+                if (adapter.adapterLayoutMode == AdapterLayoutMode.LINEAR) AdapterLayoutMode.GRID
                 else AdapterLayoutMode.LINEAR
-            val newSpanCount = if(layoutMode == AdapterLayoutMode.GRID) 2 else 1
+            val newSpanCount = if (layoutMode == AdapterLayoutMode.GRID) 2 else 1
 
             adapter.adapterLayoutMode = layoutMode
             (binding.rvListMenu.layoutManager as GridLayoutManager).spanCount = newSpanCount

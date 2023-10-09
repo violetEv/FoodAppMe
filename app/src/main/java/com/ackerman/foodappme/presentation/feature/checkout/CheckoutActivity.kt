@@ -1,16 +1,17 @@
 package com.ackerman.foodappme.presentation.feature.checkout
 
 
+import android.app.Dialog
 import android.os.Bundle
-import android.widget.Toast
+import android.widget.Button
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.navigation.Navigation
 import com.ackerman.foodappme.R
 import com.ackerman.foodappme.data.local.database.AppDatabase
 import com.ackerman.foodappme.data.local.database.datasource.CartDataSource
 import com.ackerman.foodappme.data.local.database.datasource.CartDatabaseDataSource
-import com.ackerman.foodappme.data.local.datastore.appDataStore
 import com.ackerman.foodappme.data.repository.CartRepository
 import com.ackerman.foodappme.data.repository.CartRepositoryImpl
 import com.ackerman.foodappme.databinding.ActivityCheckoutBinding
@@ -29,7 +30,7 @@ class CheckoutActivity : AppCompatActivity() {
         GenericViewModelFactory.create(CheckoutViewModel(repo))
     }
 
-    private val binding : ActivityCheckoutBinding by lazy {
+    private val binding: ActivityCheckoutBinding by lazy {
         ActivityCheckoutBinding.inflate(layoutInflater)
     }
 
@@ -43,18 +44,32 @@ class CheckoutActivity : AppCompatActivity() {
         setContentView(binding.root)
         setupList()
         observeData()
-        setClickListener()
-    }
-
-    private fun setClickListener() {
-        binding.btnCheckout.setOnClickListener {
-            Toast.makeText(this, "Order success !", Toast.LENGTH_SHORT).show()
+        val buttomCheckout = findViewById<Button>(R.id.btn_checkout)
+        buttomCheckout.setOnClickListener {
+            showSuccessDialog()
         }
     }
+
+    private fun showSuccessDialog() {
+        val dialogView = Dialog(this)
+        dialogView.setContentView(R.layout.layout_succes_dialog)
+        val button = dialogView.findViewById<Button>(R.id.btn_return)
+        button.setOnClickListener {
+            navigateToHome()
+        }
+        dialogView.show()
+    }
+
+    private fun navigateToHome() {
+        val navController = Navigation.findNavController(this,R.id.checkout_activity)
+        navController.navigate(R.id.navigation_home)
+    }
+
 
     private fun setupList() {
         binding.layoutContent.rvCart.adapter = adapter
     }
+
     private fun observeData() {
         viewModel.cartList.observe(this) {
             it.proceedWhen(doOnSuccess = { result ->
