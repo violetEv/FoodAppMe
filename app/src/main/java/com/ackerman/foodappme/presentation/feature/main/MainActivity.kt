@@ -30,7 +30,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setupBottomNav()
-        observeDarkModePref()
     }
 
     private fun setupBottomNav() {
@@ -38,9 +37,5 @@ class MainActivity : AppCompatActivity() {
         binding.navView.setupWithNavController(navController)
     }
 
-    private fun observeDarkModePref() {
-        viewModel.userDarkModeLiveData.observe(this) { isUsingDarkMode ->
-            AppCompatDelegate.setDefaultNightMode(if (isUsingDarkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
-        }
-    }
+
 }
