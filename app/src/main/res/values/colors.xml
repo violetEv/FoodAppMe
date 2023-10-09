@@ -12,6 +12,8 @@
     <color name="app_color_on_secondary">#B4B4B3</color>
     <color name="app_color_secondary_container">#FFFFFF</color>
     <color name="app_color_on_secondary_container">#1B2025</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="grey_background">#F0F0F0</color>
 
     <color name="app_color_tertiary">#1B2025</color>
     <color name="app_color_on_tertiary">#FFFFFF</color>

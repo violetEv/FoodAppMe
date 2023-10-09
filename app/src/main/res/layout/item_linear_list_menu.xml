@@ -42,7 +42,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
-            android:fontFamily="@font/poppins_bold"
+            android:fontFamily="@font/poppins_medium"
             android:textColor="@color/app_color_primary"
             app:layout_constraintTop_toBottomOf="@id/tv_menu_name"
             app:layout_constraintEnd_toEndOf="parent"

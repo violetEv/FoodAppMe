@@ -70,7 +70,6 @@
                 android:ellipsize="end"
                 android:fontFamily="@font/poppins_bold"
                 android:paddingHorizontal="16dp"
-                android:paddingVertical="4dp"
                 android:textColor="@color/app_color_primary"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"

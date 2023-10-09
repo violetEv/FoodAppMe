@@ -1,7 +1,6 @@
 package com.ackerman.foodappme.presentation.feature.detail
 
-import android.content.Intent
-import android.net.Uri
+
 import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ackerman.foodappme.data.repository.CartRepository
 import com.ackerman.foodappme.model.Menu
-import com.ackerman.foodappme.presentation.feature.detail.DetailActivity.Companion.startActivity
 import com.ackerman.foodappme.utils.ResultWrapper
 import kotlinx.coroutines.launch
 

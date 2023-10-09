@@ -1,97 +1,84 @@
-package com.ackerman.foodappme.presentation.feature.cart
+package com.ackerman.foodappme.presentation.feature.checkout
 
-import android.content.Intent
+
+import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
 import com.ackerman.foodappme.R
 import com.ackerman.foodappme.data.local.database.AppDatabase
 import com.ackerman.foodappme.data.local.database.datasource.CartDataSource
 import com.ackerman.foodappme.data.local.database.datasource.CartDatabaseDataSource
 import com.ackerman.foodappme.data.repository.CartRepository
 import com.ackerman.foodappme.data.repository.CartRepositoryImpl
-import com.ackerman.foodappme.databinding.FragmentCartBinding
-import com.ackerman.foodappme.model.Cart
+import com.ackerman.foodappme.databinding.ActivityCheckoutBinding
 import com.ackerman.foodappme.presentation.common.CartListAdapter
-import com.ackerman.foodappme.presentation.common.CartListener
-import com.ackerman.foodappme.presentation.feature.checkout.CheckoutActivity
 import com.ackerman.foodappme.utils.GenericViewModelFactory
-import com.ackerman.foodappme.utils.hideKeyboard
 import com.ackerman.foodappme.utils.proceedWhen
 import com.ackerman.foodappme.utils.toCurrencyFormat
 
-class CartFragment : Fragment() {
+class CheckoutActivity : AppCompatActivity() {
 
-    private lateinit var binding: FragmentCartBinding
-
-    private val viewModel: CartViewModel by viewModels {
-        val database = AppDatabase.getInstance(requireContext())
+    private val viewModel: CheckoutViewModel by viewModels {
+        val database = AppDatabase.getInstance(this)
         val cartDao = database.cartDao()
         val cartDataSource: CartDataSource = CartDatabaseDataSource(cartDao)
         val repo: CartRepository = CartRepositoryImpl(cartDataSource)
-        GenericViewModelFactory.create(CartViewModel(repo))
+        GenericViewModelFactory.create(CheckoutViewModel(repo))
+    }
+
+    private val binding: ActivityCheckoutBinding by lazy {
+        ActivityCheckoutBinding.inflate(layoutInflater)
     }
 
     private val adapter: CartListAdapter by lazy {
-        CartListAdapter(object : CartListener {
-            override fun onPlusTotalItemCartClicked(cart: Cart) {
-                viewModel.increaseCart(cart)
-            }
-
-            override fun onMinusTotalItemCartClicked(cart: Cart) {
-                viewModel.decreaseCart(cart)
-            }
-
-            override fun onRemoveCartClicked(cart: Cart) {
-                viewModel.removeCart(cart)
-            }
-
-            override fun onUserDoneEditingNotes(cart: Cart) {
-                viewModel.setCartNotes(cart)
-                hideKeyboard()
-            }
-        })
+        CartListAdapter()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentCartBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(binding.root)
         setupList()
         observeData()
-        binding.btnCheckout.setOnClickListener {
-            navigateToCheckoutActivity()
+        val buttomCheckout = findViewById<Button>(R.id.btn_checkout)
+        buttomCheckout.setOnClickListener {
+            showSuccessDialog()
         }
     }
 
-    private fun navigateToCheckoutActivity() {
-        val intent = Intent(requireContext(), CheckoutActivity::class.java)
-        startActivity(intent)
+    private fun showSuccessDialog() {
+        val dialogView = Dialog(this)
+        dialogView.setContentView(R.layout.layout_succes_dialog)
+        val button = dialogView.findViewById<Button>(R.id.btn_return)
+        button.setOnClickListener {
+            navigateToHome()
+        }
+        dialogView.show()
     }
 
+    private fun navigateToHome() {
+        val navController = Navigation.findNavController(this,R.id.checkout_activity)
+        navController.navigate(R.id.navigation_home)
+    }
+
+
     private fun setupList() {
-        binding.rvCart.itemAnimator = null
-        binding.rvCart.adapter = adapter
+        binding.layoutContent.rvCart.adapter = adapter
     }
 
     private fun observeData() {
-        viewModel.cartList.observe(viewLifecycleOwner) {
+        viewModel.cartList.observe(this) {
             it.proceedWhen(doOnSuccess = { result ->
                 binding.layoutState.root.isVisible = false
                 binding.layoutState.pbLoading.isVisible = false
                 binding.layoutState.tvError.isVisible = false
-                binding.rvCart.isVisible = true
+                binding.layoutContent.root.isVisible = true
+                binding.layoutContent.rvCart.isVisible = true
+                binding.cvSectionOrder.isVisible = true
                 result.payload?.let { (carts, totalPrice) ->
                     adapter.submitData(carts)
                     binding.tvTotalPrice.text = totalPrice.toCurrencyFormat()
@@ -100,13 +87,17 @@ class CartFragment : Fragment() {
                 binding.layoutState.root.isVisible = true
                 binding.layoutState.pbLoading.isVisible = true
                 binding.layoutState.tvError.isVisible = false
-                binding.rvCart.isVisible = false
+                binding.layoutContent.root.isVisible = false
+                binding.layoutContent.rvCart.isVisible = false
+                binding.cvSectionOrder.isVisible = false
             }, doOnError = { err ->
                 binding.layoutState.root.isVisible = true
                 binding.layoutState.pbLoading.isVisible = false
                 binding.layoutState.tvError.isVisible = true
                 binding.layoutState.tvError.text = err.exception?.message.orEmpty()
-                binding.rvCart.isVisible = false
+                binding.layoutContent.root.isVisible = false
+                binding.layoutContent.rvCart.isVisible = false
+                binding.cvSectionOrder.isVisible = false
             }, doOnEmpty = { data ->
                 binding.layoutState.root.isVisible = true
                 binding.layoutState.pbLoading.isVisible = false
@@ -115,7 +106,9 @@ class CartFragment : Fragment() {
                 data.payload?.let { (_, totalPrice) ->
                     binding.tvTotalPrice.text = totalPrice.toCurrencyFormat()
                 }
-                binding.rvCart.isVisible = false
+                binding.layoutContent.root.isVisible = false
+                binding.layoutContent.rvCart.isVisible = false
+                binding.cvSectionOrder.isVisible = false
             })
         }
     }
