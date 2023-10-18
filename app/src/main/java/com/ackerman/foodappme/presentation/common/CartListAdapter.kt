@@ -111,6 +111,11 @@ class CartOrderViewHolder(
             binding.ivProductImage.load(item.menu.imgMenuUrl) {
                 crossfade(true)
             }
+            tvTotalQuantity.text =
+                itemView.rootView.context.getString(
+                    R.string.total_qty,
+                    item.cart.itemQuantity.toString()
+                )
             tvProductName.text = item.menu.name
             tvProductPrice.text = (item.cart.itemQuantity * item.menu.price).toString()
         }
