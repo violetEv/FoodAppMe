@@ -35,4 +35,7 @@
     <string name="text_no_telephone">No telephone</string>
     <string name="text_payment_method">Payment Method</string>
     <string name="text_home">Home</string>
+    <string name="text_shopping_summary">Shopping Summary</string>
+    <string name="text_total_item_price">Total Item Price</string>
+    <string name="text_order">Order</string>
 </resources>
