@@ -12,20 +12,29 @@ import androidx.navigation.ui.setupWithNavController
 import com.ackerman.foodappme.R
 import com.ackerman.foodappme.data.local.datastore.UserPreferenceDataSourceImpl
 import com.ackerman.foodappme.data.local.datastore.appDataStore
+import com.ackerman.foodappme.data.network.firebase.auth.FirebaseAuthDataSourceImpl
+import com.ackerman.foodappme.data.repository.UserRepositoryImpl
 import com.ackerman.foodappme.databinding.ActivityMainBinding
 import com.ackerman.foodappme.utils.GenericViewModelFactory
 import com.ackerman.foodappme.utils.PreferenceDataStoreHelperImpl
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
+
     private val viewModel: MainViewModel by viewModels {
-        val dataStore = this.appDataStore
-        val dataStoreHelper = PreferenceDataStoreHelperImpl(dataStore)
-        val userPreferenceDataSource = UserPreferenceDataSourceImpl(dataStoreHelper)
-        GenericViewModelFactory.create(MainViewModel(userPreferenceDataSource))
+        GenericViewModelFactory.create(createViewModel())
     }
+
+    private fun createViewModel(): MainViewModel {
+        val firebaseAuth = FirebaseAuth.getInstance()
+        val dataSource = FirebaseAuthDataSourceImpl(firebaseAuth)
+        val repo = UserRepositoryImpl(dataSource)
+        return MainViewModel(repo)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)

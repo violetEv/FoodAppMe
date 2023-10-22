@@ -1,9 +1,11 @@
 package com.ackerman.foodappme.presentation.feature.checkout
 
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -12,6 +14,8 @@ import com.ackerman.foodappme.R
 import com.ackerman.foodappme.data.local.database.AppDatabase
 import com.ackerman.foodappme.data.local.database.datasource.CartDataSource
 import com.ackerman.foodappme.data.local.database.datasource.CartDatabaseDataSource
+import com.ackerman.foodappme.data.network.api.datasource.FoodAppApiDataSource
+import com.ackerman.foodappme.data.network.api.service.FoodAppApiService
 import com.ackerman.foodappme.data.repository.CartRepository
 import com.ackerman.foodappme.data.repository.CartRepositoryImpl
 import com.ackerman.foodappme.databinding.ActivityCheckoutBinding
@@ -26,7 +30,9 @@ class CheckoutActivity : AppCompatActivity() {
         val database = AppDatabase.getInstance(this)
         val cartDao = database.cartDao()
         val cartDataSource: CartDataSource = CartDatabaseDataSource(cartDao)
-        val repo: CartRepository = CartRepositoryImpl(cartDataSource)
+        val service = FoodAppApiService.invoke()
+        val apiDataSource = FoodAppApiDataSource(service)
+        val repo: CartRepository = CartRepositoryImpl(cartDataSource, apiDataSource)
         GenericViewModelFactory.create(CheckoutViewModel(repo))
     }
 
@@ -44,27 +50,51 @@ class CheckoutActivity : AppCompatActivity() {
         setContentView(binding.root)
         setupList()
         observeData()
-        val buttonCheckout = findViewById<Button>(R.id.btn_checkout)
-        buttonCheckout.setOnClickListener {
-            showSuccessDialog()
-        }
         setClickListener()
+    }
+
+    private fun observeData() {
+        observeCartData()
+        observeCheckoutResult()
+    }
+
+    private fun observeCheckoutResult() {
+        viewModel.checkoutResult.observe(this) {
+            it.proceedWhen(
+                doOnSuccess = {
+                    binding.layoutState.root.isVisible = false
+                    binding.layoutState.pbLoading.isVisible = false
+                    showSuccessDialog()
+                },
+                doOnError = {
+                    binding.layoutState.root.isVisible = false
+                    binding.layoutState.pbLoading.isVisible = false
+                    Toast.makeText(this, "Checkout Error", Toast.LENGTH_SHORT).show()
+                },
+                doOnLoading = {
+                    binding.layoutState.root.isVisible = true
+                    binding.layoutState.pbLoading.isVisible = true
+                }
+            )
+        }
     }
 
     private fun setClickListener() {
         binding.ivBack.setOnClickListener{
             onBackPressed()
         }
+        binding.btnCheckout.setOnClickListener {
+            viewModel.order()
+        }
     }
 
     private fun showSuccessDialog() {
-        val dialogView = Dialog(this)
-        dialogView.setContentView(R.layout.layout_succes_dialog)
-        val button = dialogView.findViewById<Button>(R.id.btn_return)
-        button.setOnClickListener {
-            navigateToHome()
-        }
-        dialogView.show()
+        AlertDialog.Builder(this)
+            .setMessage("CheckoutSuccess")
+            .setPositiveButton("okay"){_,_->
+                viewModel.clearCart()
+                finish()
+            }.create().show()
     }
 
     private fun navigateToHome() {
@@ -77,7 +107,7 @@ class CheckoutActivity : AppCompatActivity() {
         binding.layoutContent.rvCart.adapter = adapter
     }
 
-    private fun observeData() {
+    private fun observeCartData() {
         viewModel.cartList.observe(this) {
             it.proceedWhen(doOnSuccess = { result ->
                 binding.layoutState.root.isVisible = false

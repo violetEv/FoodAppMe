@@ -5,4 +5,8 @@ data class Cart(
     var menuId : Int = 0,
     var itemQuantity: Int = 0,
     var itemNotes: String? = null,
+    val menuName: String,
+    val menuPrice: Double,
+    val imgMenuUrl: String,
+
 )

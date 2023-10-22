@@ -11,6 +11,8 @@ import coil.load
 import com.ackerman.foodappme.data.local.database.AppDatabase
 import com.ackerman.foodappme.data.local.database.datasource.CartDataSource
 import com.ackerman.foodappme.data.local.database.datasource.CartDatabaseDataSource
+import com.ackerman.foodappme.data.network.api.datasource.FoodAppApiDataSource
+import com.ackerman.foodappme.data.network.api.service.FoodAppApiService
 import com.ackerman.foodappme.data.repository.CartRepository
 import com.ackerman.foodappme.data.repository.CartRepositoryImpl
 import com.ackerman.foodappme.databinding.ActivityDetailBinding
@@ -29,7 +31,9 @@ class DetailActivity : AppCompatActivity() {
         val database = AppDatabase.getInstance(this)
         val cartDao = database.cartDao()
         val cartDataSource: CartDataSource = CartDatabaseDataSource(cartDao)
-        val repo: CartRepository = CartRepositoryImpl(cartDataSource)
+        val service = FoodAppApiService.invoke()
+        val apiDataSource = FoodAppApiDataSource(service)
+        val repo: CartRepository = CartRepositoryImpl(cartDataSource,apiDataSource)
         GenericViewModelFactory.create(
             DetailViewModel(intent?.extras, repo)
         )
@@ -51,7 +55,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun navigateToGoogleMaps() {
-        val mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:-6.3016,$106.65337"))
+        val mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:-6.300550266059584, 106.65447133997473"))
         mapIntent.setPackage("com.google.android.apps.maps")
         startActivity(mapIntent)
     }

@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.FoodAppMe" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Base.Theme.FoodAppMe" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-
+        <item name="android:windowFullscreen">true</item>
         <item name="colorPrimary">@color/app_color_primary</item>
         <item name="colorOnPrimary">@color/app_color_on_primary</item>
         <item name="colorPrimaryContainer">@color/app_color_primary_container</item>
@@ -24,4 +24,5 @@
         <item name="colorErrorContainer">@color/app_color_error_container</item>
         <item name="colorOnErrorContainer">@color/app_color_on_error_container</item>
     </style>
+    <style name="Theme.FoodAppMe" parent="Base.Theme.FoodAppMe"/>
 </resources>

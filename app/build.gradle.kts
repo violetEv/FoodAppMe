@@ -3,6 +3,8 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -37,6 +39,16 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
+    }
+    flavorDimensions += "env"
+    productFlavors{
+        create("production"){
+            buildConfigField("String", "BASE_URL","\"https://d9836b6a-bdcd-4a92-a99e-4edd62298878.mock.pstmn.io\"")
+        }
+        create("integration"){
+            buildConfigField("String", "BASE_URL","\"https://d9836b6a-bdcd-4a92-a99e-4edd62298878.mock.pstmn.io\"")
+        }
     }
 }
 
@@ -68,5 +80,14 @@ dependencies {
     //room database libraries
     implementation("androidx.room:room-ktx:2.5.2")
     ksp("androidx.room:room-compiler:2.5.2")
+    //firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-auth-ktx")
+    //retrofit & okhttp
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.okhttp3:okhttp:4.11.0")
 
 }

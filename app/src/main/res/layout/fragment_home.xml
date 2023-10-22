@@ -150,9 +150,17 @@
                     android:nestedScrollingEnabled="true"
                     android:orientation="horizontal"
                     android:paddingHorizontal="8dp"
+                    android:visibility="gone"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintTop_toBottomOf="@id/cv_banner"
                     tools:listitem="@layout/item_category_menu" />
+                <include
+                    android:id="@+id/layout_state_category"
+                    layout="@layout/common_layout_content_state"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
                 <!--titleListMenu-->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_title_list_menu"
