@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1010947935131",
+    "project_id": "foodappme-ninda",
+    "storage_bucket": "foodappme-ninda.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1010947935131:android:60066eeccce51f4edc6f3e",
+        "android_client_info": {
+          "package_name": "com.ackerman.foodappme"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPbgIuNPyxVY_R2r5ODBNP2pH0kKYQklY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
