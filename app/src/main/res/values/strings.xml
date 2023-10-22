@@ -38,4 +38,21 @@
     <string name="text_shopping_summary">Shopping Summary</string>
     <string name="text_total_item_price">Total Item Price</string>
     <string name="text_order">Order</string>
+    <string name="hint_name">Your name</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_confirm_password">Confirm password</string>
+    <string name="text_log_in">Log In</string>
+    <string name="text_not_registered_yet_register_here">Not registered yet ? Register Here</string>
+    <string name="text_register">Register</string>
+    <string name="text_already_have_an_account_click_here">Already have an Account ? Login Here</string>
+    <string name="text_highlight_register">Register Here</string>
+    <string name="text_highlight_login_here">Login Here</string>
+    <string name="text_error_name_cannot_empty">Name cannot be empty</string>
+    <string name="text_error_email_empty">Email should not be empty</string>
+    <string name="text_error_email_invalid">Enter a valid format email</string>
+    <string name="text_error_password_empty">Password should not be empty</string>
+    <string name="text_logout">Logout</string>
+    <string name="text_628900001222">+628900001222</string>
+
 </resources>

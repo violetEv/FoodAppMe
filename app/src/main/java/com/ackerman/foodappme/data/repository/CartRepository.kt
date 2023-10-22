@@ -3,9 +3,11 @@ package com.ackerman.foodappme.data.repository
 import com.ackerman.foodappme.data.local.database.datasource.CartDataSource
 import com.ackerman.foodappme.data.local.database.entity.CartEntity
 import com.ackerman.foodappme.data.local.database.mapper.toCartEntity
-import com.ackerman.foodappme.data.local.database.mapper.toCartMenuList
+import com.ackerman.foodappme.data.local.database.mapper.toCartList
+import com.ackerman.foodappme.data.network.api.datasource.FoodAppDataSource
+import com.ackerman.foodappme.data.network.api.model.order.OrderItemRequest
+import com.ackerman.foodappme.data.network.api.model.order.OrderRequest
 import com.ackerman.foodappme.model.Cart
-import com.ackerman.foodappme.model.CartMenu
 import com.ackerman.foodappme.model.Menu
 import com.ackerman.foodappme.utils.ResultWrapper
 import com.ackerman.foodappme.utils.proceed
@@ -18,26 +20,33 @@ import kotlinx.coroutines.flow.onStart
 import java.lang.IllegalStateException
 
 interface CartRepository {
-    fun getCartList(): Flow<ResultWrapper<Pair<List<CartMenu>, Double>>>
+    fun getUserCardData(): Flow<ResultWrapper<Pair<List<Cart>, Double>>>
     suspend fun createCart(product: Menu, totalQuantity: Int): Flow<ResultWrapper<Boolean>>
     suspend fun decreaseCart(item: Cart): Flow<ResultWrapper<Boolean>>
     suspend fun increaseCart(item: Cart): Flow<ResultWrapper<Boolean>>
     suspend fun setCartNotes(item: Cart): Flow<ResultWrapper<Boolean>>
     suspend fun deleteCart(item: Cart): Flow<ResultWrapper<Boolean>>
+    suspend fun order(item: List<Cart>): Flow<ResultWrapper<Boolean>>
+    suspend fun deleteAll()
+
 }
 
 class CartRepositoryImpl(
-    private val dataSource: CartDataSource
+    private val dataSource: CartDataSource,
+    private val foodAppDataSource: FoodAppDataSource
 ) : CartRepository {
+    override suspend fun deleteAll() {
+        dataSource.deleteAll()
+    }
 
-    override fun getCartList(): Flow<ResultWrapper<Pair<List<CartMenu>, Double>>> {
+    override fun getUserCardData(): Flow<ResultWrapper<Pair<List<Cart>, Double>>> {
         return dataSource.getAllCarts()
             .map {
                 proceed {
-                    val result = it.toCartMenuList()
+                    val result = it.toCartList()
                     val totalPrice = result.sumOf {
-                        val pricePerItem = it.menu.price
-                        val quantity = it.cart.itemQuantity
+                        val pricePerItem = it.menuPrice
+                        val quantity = it.itemQuantity
                         pricePerItem * quantity
                     }
                     Pair(result, totalPrice)
@@ -61,7 +70,12 @@ class CartRepositoryImpl(
         return menu.id?.let { menuId ->
             proceedFlow {
                 val affectedRow = dataSource.insertCart(
-                    CartEntity(menuId = menuId, itemQuantity = totalQuantity)
+                    CartEntity(
+                        menuId = menuId,
+                        itemQuantity = totalQuantity,
+                        imgMenuUrl = menu.imgMenuUrl,
+                        menuName = menu.name,
+                        menuPrice = menu.price)
                 )
                 affectedRow > 0
             }
@@ -94,6 +108,15 @@ class CartRepositoryImpl(
 
     override suspend fun deleteCart(item: Cart): Flow<ResultWrapper<Boolean>> {
         return proceedFlow { dataSource.deleteCart(item.toCartEntity()) > 0 }
+    }
+    override suspend fun order(item: List<Cart>): Flow<ResultWrapper<Boolean>> {
+        return proceedFlow {
+            val orderItems = item.map{
+                OrderItemRequest(it.itemNotes, it.menuId,it.itemQuantity)
+            }
+            val orderRequest = OrderRequest(orderItems)
+            foodAppDataSource.createOrder(orderRequest).status == true
+        }
     }
 
 }

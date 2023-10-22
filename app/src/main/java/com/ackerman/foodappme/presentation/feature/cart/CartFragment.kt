@@ -13,6 +13,8 @@ import com.ackerman.foodappme.R
 import com.ackerman.foodappme.data.local.database.AppDatabase
 import com.ackerman.foodappme.data.local.database.datasource.CartDataSource
 import com.ackerman.foodappme.data.local.database.datasource.CartDatabaseDataSource
+import com.ackerman.foodappme.data.network.api.datasource.FoodAppApiDataSource
+import com.ackerman.foodappme.data.network.api.service.FoodAppApiService
 import com.ackerman.foodappme.data.repository.CartRepository
 import com.ackerman.foodappme.data.repository.CartRepositoryImpl
 import com.ackerman.foodappme.databinding.FragmentCartBinding
@@ -33,7 +35,9 @@ class CartFragment : Fragment() {
         val database = AppDatabase.getInstance(requireContext())
         val cartDao = database.cartDao()
         val cartDataSource: CartDataSource = CartDatabaseDataSource(cartDao)
-        val repo: CartRepository = CartRepositoryImpl(cartDataSource)
+        val service = FoodAppApiService.invoke()
+        val apiDataSource = FoodAppApiDataSource(service)
+        val repo: CartRepository = CartRepositoryImpl(cartDataSource,apiDataSource)
         GenericViewModelFactory.create(CartViewModel(repo))
     }
 
@@ -70,15 +74,16 @@ class CartFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupList()
         observeData()
+        setClickListener()
+
+    }
+
+    private fun setClickListener() {
         binding.btnCheckout.setOnClickListener {
-            navigateToCheckoutActivity()
+            context?.startActivity(Intent(requireContext(),CheckoutActivity::class.java))
         }
     }
 
-    private fun navigateToCheckoutActivity() {
-        val intent = Intent(requireContext(), CheckoutActivity::class.java)
-        startActivity(intent)
-    }
 
     private fun setupList() {
         binding.rvCart.itemAnimator = null

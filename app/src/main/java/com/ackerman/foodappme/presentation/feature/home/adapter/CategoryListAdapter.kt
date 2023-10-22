@@ -23,7 +23,7 @@ class CategoryListAdapter (
             return oldItem.hashCode() == newItem.hashCode()
         }
     })
-    fun setData(data: List<Category>){
+    fun submitData(data: List<Category>){
         dataDiffer.submitList(data)
     }
 

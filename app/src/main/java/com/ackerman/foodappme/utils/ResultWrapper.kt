@@ -46,7 +46,7 @@ suspend fun <T> proceed(block: suspend () -> T): ResultWrapper<T> {
     }
 }
 
-suspend fun <T> proceedFlow(block: suspend () -> T): Flow<ResultWrapper<T>> {
+fun <T> proceedFlow(block: suspend () -> T): Flow<ResultWrapper<T>> {
     return flow<ResultWrapper<T>> {
         val result = block.invoke()
         emit(
