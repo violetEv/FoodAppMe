@@ -49,7 +49,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setClickListeners() {
-        binding.ivEditProfile.setOnClickListener {
+        binding.btnChangeProfile.setOnClickListener {
             navigateToEditProfile()
         }
         binding.llLogout.setOnClickListener {
@@ -86,17 +86,12 @@ class ProfileFragment : Fragment() {
     }
 
     private fun showUserData() {
-        val user = viewModel.getCurrentUser()
-        if (user != null) {
-            binding.tfUsername.setText(user.fullName)
-            binding.tfEmail.setText(user.email)
-        } else {
-            binding.tfUsername.setText("User not found")
-        }
+        binding.layoutForm.etName.setText(viewModel.getCurrentUser()?.fullName)
+        binding.layoutForm.etEmail.setText(viewModel.getCurrentUser()?.email)
+        binding.layoutForm.tilEmail.isEnabled = false
     }
     private fun setupForm() {
-        binding.tfUsername.isVisible = true
-        binding.tfEmail.isVisible = true
-        binding.tfPassword.isVisible = true
+        binding.layoutForm.tilName.isVisible = true
+        binding.layoutForm.tilEmail.isVisible = true
     }
 }

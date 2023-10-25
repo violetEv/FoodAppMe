@@ -60,7 +60,6 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-
     private fun navigateToLogin() {
         //todo : navigate to login
         val intent = Intent(this, LoginActivity::class.java).apply {
@@ -85,7 +84,7 @@ class RegisterActivity : AppCompatActivity() {
                     binding.pbLoading.isVisible = false
                     binding.btnRegister.isVisible = true
                     binding.btnRegister.isEnabled = false
-                    navigateToLogin()
+                    navigateToMain()
                 },
                 doOnLoading = {
                     binding.pbLoading.isVisible = true
@@ -101,7 +100,12 @@ class RegisterActivity : AppCompatActivity() {
             )
         }
     }
-
+    private fun navigateToMain() {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        }
+        startActivity(intent)
+    }
 
 
     private fun isFormValid(): Boolean {

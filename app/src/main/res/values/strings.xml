@@ -54,5 +54,6 @@
     <string name="text_error_password_empty">Password should not be empty</string>
     <string name="text_logout">Logout</string>
     <string name="text_628900001222">+628900001222</string>
+    <string name="text_change_password">Change password</string>
 
 </resources>
