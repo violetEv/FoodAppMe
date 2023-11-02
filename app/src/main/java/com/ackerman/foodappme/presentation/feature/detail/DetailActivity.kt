@@ -5,21 +5,15 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import coil.load
-import com.ackerman.foodappme.data.local.database.AppDatabase
-import com.ackerman.foodappme.data.local.database.datasource.CartDataSource
-import com.ackerman.foodappme.data.local.database.datasource.CartDatabaseDataSource
-import com.ackerman.foodappme.data.network.api.datasource.FoodAppApiDataSource
-import com.ackerman.foodappme.data.network.api.service.FoodAppApiService
-import com.ackerman.foodappme.data.repository.CartRepository
-import com.ackerman.foodappme.data.repository.CartRepositoryImpl
+import com.ackerman.foodappme.R
 import com.ackerman.foodappme.databinding.ActivityDetailBinding
 import com.ackerman.foodappme.model.Menu
-import com.ackerman.foodappme.utils.GenericViewModelFactory
 import com.ackerman.foodappme.utils.proceedWhen
 import com.ackerman.foodappme.utils.toCurrencyFormat
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class DetailActivity : AppCompatActivity() {
 
@@ -27,16 +21,8 @@ class DetailActivity : AppCompatActivity() {
         ActivityDetailBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: DetailViewModel by viewModels {
-        val database = AppDatabase.getInstance(this)
-        val cartDao = database.cartDao()
-        val cartDataSource: CartDataSource = CartDatabaseDataSource(cartDao)
-        val service = FoodAppApiService.invoke()
-        val apiDataSource = FoodAppApiDataSource(service)
-        val repo: CartRepository = CartRepositoryImpl(cartDataSource,apiDataSource)
-        GenericViewModelFactory.create(
-            DetailViewModel(intent?.extras, repo)
-        )
+    private val viewModel: DetailViewModel by viewModel {
+        parametersOf(intent.extras)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,13 +35,14 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun setCLick() {
-        binding.clLocation.setOnClickListener{
+        binding.clLocation.setOnClickListener {
             navigateToGoogleMaps()
         }
     }
 
     private fun navigateToGoogleMaps() {
-        val mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:-6.300550266059584, 106.65447133997473"))
+        val mapIntent =
+            Intent(Intent.ACTION_VIEW, Uri.parse("geo:-6.300550266059584, 106.65447133997473"))
         mapIntent.setPackage("com.google.android.apps.maps")
         startActivity(mapIntent)
     }
@@ -73,7 +60,6 @@ class DetailActivity : AppCompatActivity() {
         binding.btnAddToCart.setOnClickListener {
             viewModel.addToCart()
         }
-
     }
 
     private fun observeData() {
@@ -86,11 +72,17 @@ class DetailActivity : AppCompatActivity() {
         viewModel.addToCartResult.observe(this) {
             it.proceedWhen(
                 doOnSuccess = {
-                    Toast.makeText(this, "Add to cart success !", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.text_add_to_cart_success),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     finish()
-                }, doOnError = {
+                },
+                doOnError = {
                     Toast.makeText(this, it.exception?.message.orEmpty(), Toast.LENGTH_SHORT).show()
-                })
+                }
+            )
         }
     }
 
@@ -106,7 +98,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val EXTRA_MENU= "EXTRA_MENU"
+        const val EXTRA_MENU = "EXTRA_MENU"
         fun startActivity(context: Context, product: Menu) {
             val intent = Intent(context, DetailActivity::class.java)
             intent.putExtra(EXTRA_MENU, product)

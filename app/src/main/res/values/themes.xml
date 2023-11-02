@@ -1,8 +1,9 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.FoodAppMe" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="fontFamily">@font/poppins</item>
         <item name="android:windowFullscreen">true</item>
         <item name="colorPrimary">@color/app_color_primary</item>
         <item name="colorOnPrimary">@color/app_color_on_primary</item>
@@ -24,10 +25,7 @@
         <item name="colorErrorContainer">@color/app_color_error_container</item>
         <item name="colorOnErrorContainer">@color/app_color_on_error_container</item>
     </style>
-    <style name="Theme.FoodAppMe" parent="Base.Theme.FoodAppMe"/>
-    <style name="circleImageView" >
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
-    </style>
+
+    <style name="Theme.FoodAppMe" parent="Base.Theme.FoodAppMe" />
 
 </resources>

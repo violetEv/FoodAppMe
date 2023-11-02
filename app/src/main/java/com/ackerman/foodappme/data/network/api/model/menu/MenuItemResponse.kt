@@ -13,7 +13,7 @@ data class MenuItemResponse(
     @SerializedName("price")
     val price: Double?,
     @SerializedName("address")
-    val resAddress:String?,
+    val resAddress: String?,
     @SerializedName("format_price")
     val formatPrice: String?,
     @SerializedName("desc")
@@ -21,11 +21,13 @@ data class MenuItemResponse(
     @SerializedName("img_menu_url")
     val imgMenuUrl: String?
 )
+
 fun MenuItemResponse.toMenu() = Menu(
-    id = this.id?:0,
+    id = this.id ?: 0,
     name = this.name.orEmpty(),
-    price = this.price?:0.0,
+    price = this.price ?: 0.0,
     desc = this.desc.orEmpty(),
     imgMenuUrl = this.imgMenuUrl.orEmpty()
 )
+
 fun Collection<MenuItemResponse>.toMenuList() = this.map { it.toMenu() }

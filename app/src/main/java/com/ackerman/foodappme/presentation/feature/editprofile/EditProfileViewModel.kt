@@ -19,12 +19,12 @@ class EditProfileViewModel(private val repo: UserRepository) : ViewModel() {
     fun createChangePwdRequest() {
         repo.sendChangePasswordRequestByEmail()
     }
-    fun updateProfile(fullName:String){
+
+    fun updateProfile(fullName: String) {
         viewModelScope.launch {
-            repo.updateProfile(fullName).collect{
+            repo.updateProfile(fullName).collect {
                 _dataProfile.postValue(it)
             }
         }
     }
-
 }

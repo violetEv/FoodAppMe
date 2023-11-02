@@ -3,8 +3,9 @@ package com.ackerman.foodappme.data.dummy
 import com.ackerman.foodappme.model.Menu
 
 interface DummyMenuDataSource {
-    fun getMenuList() : List<Menu>
+    fun getMenuList(): List<Menu>
 }
+
 class DummyMenuDataSourceImpl() : DummyMenuDataSource {
     override fun getMenuList(): List<Menu> = listOf(
         Menu(
@@ -64,5 +65,4 @@ class DummyMenuDataSourceImpl() : DummyMenuDataSource {
             desc = "A refreshing and sweet milk-based beverage infused with the flavor of ripe strawberries, commonly enjoyed as a dessert drink."
         )
     )
-
 }

@@ -3,30 +3,20 @@ package com.ackerman.foodappme.presentation.feature.editprofile
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.ackerman.foodappme.data.network.firebase.auth.FirebaseAuthDataSourceImpl
-import com.ackerman.foodappme.data.repository.UserRepositoryImpl
+import com.ackerman.foodappme.R
 import com.ackerman.foodappme.databinding.ActivityEditProfileBinding
 import com.ackerman.foodappme.presentation.feature.profile.ProfileFragment
-import com.ackerman.foodappme.utils.GenericViewModelFactory
 import com.ackerman.foodappme.utils.proceedWhen
-import com.google.firebase.auth.FirebaseAuth
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EditProfileActivity : AppCompatActivity() {
     private val binding: ActivityEditProfileBinding by lazy {
         ActivityEditProfileBinding.inflate(layoutInflater)
     }
-    private val viewModel:EditProfileViewModel by viewModels{
-            GenericViewModelFactory.create(createViewModel()) }
-
-    private fun createViewModel(): EditProfileViewModel {
-        val firebaseAuth = FirebaseAuth.getInstance()
-        val dataSource = FirebaseAuthDataSourceImpl(firebaseAuth)
-        val repo = UserRepositoryImpl(dataSource)
-        return EditProfileViewModel(repo)
-    }
+    private val viewModel: EditProfileViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,25 +28,23 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun showData() {
-        val user = viewModel.getCurrentUser()
-        if (user != null) {
-            binding.tfUsername.setText(user.fullName)
-            binding.tfEmail.setText(user.email)
-        } else {
-            binding.tfUsername.setText("User not found")
-        }
+        binding.layoutForm.etName.setText(viewModel.getCurrentUser()?.fullName)
+        binding.layoutForm.etEmail.setText(viewModel.getCurrentUser()?.email)
+        binding.layoutForm.tilEmail.isEnabled = false
     }
 
-
     private fun observeData() {
-        viewModel.dataProfile.observe(this){
+        viewModel.dataProfile.observe(this) {
             it.proceedWhen(
                 doOnSuccess = {
-                    binding.clEditLayout.isVisible= true
+                    binding.btnSaveChangeProfile.isVisible = true
+                    binding.btnSaveChangeProfile.isEnabled = true
                     binding.pbLoading.isVisible = false
+                    navigateToProfile()
+                    Toast.makeText(this, "Edit profile success!", Toast.LENGTH_SHORT).show()
                 },
                 doOnLoading = {
-                    binding.clEditLayout.isVisible = false
+                    binding.btnSaveChangeProfile.isVisible = false
                     binding.pbLoading.isVisible = true
                 }
             )
@@ -64,11 +52,34 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun setClickListeners() {
-        binding.ivEditPassword.setOnClickListener{
+        binding.tvChangePwd.setOnClickListener {
             requestChangePassword()
         }
-        binding.ivCheck.setOnClickListener{
-            navigateToProfile()
+        binding.btnSaveChangeProfile.setOnClickListener {
+            changeProfileData()
+        }
+    }
+
+    private fun isFormValid(): Boolean {
+        val newName = binding.layoutForm.etName.text.toString().trim()
+        return checkNameValidation(newName)
+    }
+
+    private fun checkNameValidation(newName: String): Boolean {
+        return if (newName.isEmpty()) {
+            binding.layoutForm.tilName.isErrorEnabled = true
+            binding.layoutForm.tilName.error = getString(R.string.text_error_name_cannot_empty)
+            false
+        } else {
+            binding.layoutForm.tilName.isErrorEnabled = false
+            true
+        }
+    }
+
+    private fun changeProfileData() {
+        if (isFormValid()) {
+            val fullName = binding.layoutForm.etName.text.toString().trim()
+            viewModel.updateProfile(fullName)
         }
     }
 
@@ -83,18 +94,15 @@ class EditProfileActivity : AppCompatActivity() {
         viewModel.createChangePwdRequest()
         AlertDialog.Builder(this)
             .setMessage(
-                "Change Password request sent to your email"+
-                        "\$(viewModel.getCurrentUser()?.email)\""
+                getString(R.string.text_change_password_request_sent_to_your_email) +
+                    "\$(viewModel.getCurrentUser()?.email)\""
             )
-            .setPositiveButton("Okay"){_,_->
-
+            .setPositiveButton("Okay") { _, _ ->
             }.create().show()
     }
 
-
     private fun setupForm() {
-        binding.tfUsername.isVisible = true
-        binding.tfEmail.isVisible = true
-        binding.tfPassword.isVisible = true
+        binding.layoutForm.tilName.isVisible = true
+        binding.layoutForm.tilEmail.isVisible = true
     }
 }

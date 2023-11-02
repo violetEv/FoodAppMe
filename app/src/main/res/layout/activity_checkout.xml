@@ -5,7 +5,7 @@
     android:id="@+id/checkout_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_background"
+    android:background="@color/background"
     tools:context=".presentation.feature.checkout.CheckoutActivity">
     <!--actionBar-->
     <LinearLayout
@@ -31,8 +31,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:fontFamily="@font/poppins_bold"
-            android:text="@string/text_order_confirmation" />
+            android:textStyle="bold"
+            android:text="@string/text_order_confirmation"
+            android:textSize="18sp"/>
     </LinearLayout>
     <!--layoutContentOrder-->
     <include
@@ -58,6 +59,7 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="16dp"
         android:paddingVertical="8dp"
+        android:background="@color/bg_item"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">

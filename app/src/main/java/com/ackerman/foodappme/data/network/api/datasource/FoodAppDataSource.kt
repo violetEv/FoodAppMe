@@ -24,5 +24,4 @@ class FoodAppApiDataSource(private val service: FoodAppApiService) : FoodAppData
     override suspend fun createOrder(orderRequest: OrderRequest): OrderResponse {
         return service.createOrder(orderRequest)
     }
-
 }

@@ -17,31 +17,40 @@ class MenuListAdapter(
     private val onClickListener: (Menu) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val dataDiffer = AsyncListDiffer(this, object : DiffUtil.ItemCallback<Menu>() {
-        override fun areItemsTheSame(oldItem: Menu, newItem: Menu): Boolean {
-            return oldItem.id == newItem.id
-        }
+    private val dataDiffer = AsyncListDiffer(
+        this,
+        object : DiffUtil.ItemCallback<Menu>() {
+            override fun areItemsTheSame(oldItem: Menu, newItem: Menu): Boolean {
+                return oldItem.id == newItem.id
+            }
 
-        override fun areContentsTheSame(oldItem: Menu, newItem: Menu): Boolean {
-            return oldItem.hashCode() == newItem.hashCode()
+            override fun areContentsTheSame(oldItem: Menu, newItem: Menu): Boolean {
+                return oldItem.hashCode() == newItem.hashCode()
+            }
         }
-    })
+    )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             AdapterLayoutMode.GRID.ordinal -> {
                 GridMenuListItemViewHolder(
                     binding = ItemGridListMenuBinding.inflate(
-                        LayoutInflater.from(parent.context), parent, false
-                    ), onClickListener
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    ),
+                    onClickListener
                 )
             }
 
             else -> {
                 LinearMenuListItemViewHolder(
                     binding = ItemLinearListMenuBinding.inflate(
-                        LayoutInflater.from(parent.context), parent, false
-                    ), onClickListener
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    ),
+                    onClickListener
                 )
             }
         }
@@ -56,17 +65,18 @@ class MenuListAdapter(
     override fun getItemViewType(position: Int): Int {
         return adapterLayoutMode.ordinal
     }
-    fun submitData(data : List<Menu>){
+
+    fun submitData(data: List<Menu>) {
         dataDiffer.submitList(data)
     }
 
-    //MENU LIST VIEW HOLDER
-    class LinearMenuListItemViewHolder (
-        private val binding : ItemLinearListMenuBinding,
-        private val onClicklistener : (Menu) -> Unit
-    ) : RecyclerView.ViewHolder(binding.root),ViewHolderBinder<Menu>{
+    // MENU LIST VIEW HOLDER
+    class LinearMenuListItemViewHolder(
+        private val binding: ItemLinearListMenuBinding,
+        private val onClicklistener: (Menu) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root), ViewHolderBinder<Menu> {
         override fun bind(item: Menu) {
-            binding.ivMenuList.load(item.imgMenuUrl){
+            binding.ivMenuList.load(item.imgMenuUrl) {
                 crossfade(true)
             }
             binding.tvMenuName.text = item.name
@@ -76,12 +86,13 @@ class MenuListAdapter(
             }
         }
     }
+
     class GridMenuListItemViewHolder(
-        private val binding : ItemGridListMenuBinding,
-        private val onClickListener : (Menu) -> Unit
-    ) : RecyclerView.ViewHolder(binding.root),ViewHolderBinder<Menu>{
+        private val binding: ItemGridListMenuBinding,
+        private val onClickListener: (Menu) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root), ViewHolderBinder<Menu> {
         override fun bind(item: Menu) {
-            binding.ivMenuList.load(item.imgMenuUrl){
+            binding.ivMenuList.load(item.imgMenuUrl) {
                 crossfade(true)
             }
             binding.tvMenuName.text = item.name

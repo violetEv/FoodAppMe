@@ -25,5 +25,3 @@ fun Cart?.toCartEntity() = CartEntity(
 )
 
 fun List<CartEntity?>.toCartList() = this.map { it.toCart() }
-
-
