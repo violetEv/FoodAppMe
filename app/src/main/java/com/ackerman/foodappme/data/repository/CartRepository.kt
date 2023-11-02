@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
-import java.lang.IllegalStateException
 
 interface CartRepository {
     fun getUserCardData(): Flow<ResultWrapper<Pair<List<Cart>, Double>>>
@@ -28,7 +27,6 @@ interface CartRepository {
     suspend fun deleteCart(item: Cart): Flow<ResultWrapper<Boolean>>
     suspend fun order(item: List<Cart>): Flow<ResultWrapper<Boolean>>
     suspend fun deleteAll()
-
 }
 
 class CartRepositoryImpl(
@@ -52,10 +50,11 @@ class CartRepositoryImpl(
                     Pair(result, totalPrice)
                 }
             }.map {
-                if (it.payload?.first?.isEmpty() == true)
+                if (it.payload?.first?.isEmpty() == true) {
                     ResultWrapper.Empty(it.payload)
-                else
+                } else {
                     it
+                }
             }
             .onStart {
                 emit(ResultWrapper.Loading())
@@ -75,7 +74,8 @@ class CartRepositoryImpl(
                         itemQuantity = totalQuantity,
                         imgMenuUrl = menu.imgMenuUrl,
                         menuName = menu.name,
-                        menuPrice = menu.price)
+                        menuPrice = menu.price
+                    )
                 )
                 affectedRow > 0
             }
@@ -109,14 +109,14 @@ class CartRepositoryImpl(
     override suspend fun deleteCart(item: Cart): Flow<ResultWrapper<Boolean>> {
         return proceedFlow { dataSource.deleteCart(item.toCartEntity()) > 0 }
     }
+
     override suspend fun order(item: List<Cart>): Flow<ResultWrapper<Boolean>> {
         return proceedFlow {
-            val orderItems = item.map{
-                OrderItemRequest(it.itemNotes, it.menuId,it.itemQuantity)
+            val orderItems = item.map {
+                OrderItemRequest(it.itemNotes, it.menuId, it.itemQuantity)
             }
             val orderRequest = OrderRequest(orderItems)
             foodAppDataSource.createOrder(orderRequest).status == true
         }
     }
-
 }

@@ -24,7 +24,6 @@ abstract class AppDatabase : RoomDatabase() {
             // if the INSTANCE is not null, then return it,
             // if it is, then create the database
             return INSTANCE ?: synchronized(this) {
-
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
@@ -39,4 +38,3 @@ abstract class AppDatabase : RoomDatabase() {
         }
     }
 }
-

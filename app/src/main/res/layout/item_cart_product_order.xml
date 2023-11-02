@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/bg_item"
+    android:layout_margin="8dp"
     android:layout_height="wrap_content"
     android:padding="8dp">
 
@@ -24,8 +26,6 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:textSize="16sp"
-        android:textStyle="bold"
-        android:fontFamily="@font/poppins_medium"
         app:layout_constraintEnd_toStartOf="@+id/tv_total_quantity"
         app:layout_constraintStart_toEndOf="@id/iv_product_image"
         app:layout_constraintTop_toTopOf="parent"

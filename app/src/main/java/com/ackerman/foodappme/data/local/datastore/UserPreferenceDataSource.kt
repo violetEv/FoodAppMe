@@ -4,7 +4,6 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.ackerman.foodappme.utils.PreferenceDataStoreHelper
 import kotlinx.coroutines.flow.Flow
 
-
 interface UserPreferenceDataSource {
     suspend fun getUserDarkModePref(): Boolean
     fun getUserDarkModePrefFlow(): Flow<Boolean>

@@ -4,37 +4,22 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.ackerman.foodappme.R
-import com.ackerman.foodappme.data.network.firebase.auth.FirebaseAuthDataSource
-import com.ackerman.foodappme.data.network.firebase.auth.FirebaseAuthDataSourceImpl
-import com.ackerman.foodappme.data.repository.UserRepository
-import com.ackerman.foodappme.data.repository.UserRepositoryImpl
 import com.ackerman.foodappme.databinding.ActivityRegisterBinding
 import com.ackerman.foodappme.presentation.feature.login.LoginActivity
 import com.ackerman.foodappme.presentation.feature.main.MainActivity
-import com.ackerman.foodappme.utils.GenericViewModelFactory
 import com.ackerman.foodappme.utils.highLightWord
 import com.ackerman.foodappme.utils.proceedWhen
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.auth.FirebaseAuth
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterActivity : AppCompatActivity() {
     private val binding: ActivityRegisterBinding by lazy {
         ActivityRegisterBinding.inflate(layoutInflater)
     }
-    private val viewModel: RegisterViewModel by viewModels {
-        GenericViewModelFactory.create(createViewModel())
-    }
-
-    private fun createViewModel(): RegisterViewModel {
-        val firebaseAuth = FirebaseAuth.getInstance()
-        val dataSource: FirebaseAuthDataSource = FirebaseAuthDataSourceImpl(firebaseAuth)
-        val repository: UserRepository = UserRepositoryImpl(dataSource)
-        return RegisterViewModel(repository)
-    }
+    private val viewModel: RegisterViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +46,6 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun navigateToLogin() {
-        //todo : navigate to login
         val intent = Intent(this, LoginActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
@@ -94,12 +78,16 @@ class RegisterActivity : AppCompatActivity() {
                     binding.pbLoading.isVisible = false
                     binding.btnRegister.isVisible = true
                     binding.btnRegister.isEnabled = true
-                    Toast.makeText(this, "Register Failed: ${it.exception?.message.orEmpty()}",
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        "Register Failed: ${it.exception?.message.orEmpty()}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             )
         }
     }
+
     private fun navigateToMain() {
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -107,23 +95,20 @@ class RegisterActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-
     private fun isFormValid(): Boolean {
-        //ambil nilai dari form yg sudah kita punya
-        //trim biar tidak ada spasi kanan dan kiri
+        // ambil nilai dari form yg sudah kita punya
+        // trim biar tidak ada spasi kanan dan kiri
         val name = binding.layoutForm.etName.text.toString().trim()
         val email = binding.layoutForm.etEmail.text.toString().trim()
         val password = binding.layoutForm.etPassword.text.toString().trim()
         val confirmPassword = binding.layoutForm.etConfirmPassword.text.toString().trim()
-        return checkNameValidation(name) && checkEmailValidation(email)
-                && checkPasswordValidation(password, binding.layoutForm.tilPassword)
-                && checkPasswordValidation(confirmPassword, binding.layoutForm.tilConfirmPassword)
-                && checkPwdAndConfirmPwd(password, confirmPassword)
-
+        return checkNameValidation(name) && checkEmailValidation(email) &&
+            checkPasswordValidation(password, binding.layoutForm.tilPassword) &&
+            checkPasswordValidation(confirmPassword, binding.layoutForm.tilConfirmPassword) &&
+            checkPwdAndConfirmPwd(password, confirmPassword)
     }
 
     private fun checkNameValidation(fullName: String): Boolean {
-        //todo : check form validation
         return if (fullName.isEmpty()) {
             binding.layoutForm.tilName.isErrorEnabled = true
             binding.layoutForm.tilName.error = getString(R.string.text_error_name_cannot_empty)
@@ -153,14 +138,13 @@ class RegisterActivity : AppCompatActivity() {
         password: String,
         textInputLayout: TextInputLayout
     ): Boolean {
-        //todo : check form validation
         return if (password.isEmpty()) {
             textInputLayout.isErrorEnabled = true
             textInputLayout.error = getString(R.string.text_error_password_empty)
             false
         } else if (password.length < 8) {
             textInputLayout.isErrorEnabled = true
-            textInputLayout.error = "Password cannot less than 8 character"
+            textInputLayout.error = getString(R.string.text_password_cannot_less_than_8_character)
             false
         } else {
             textInputLayout.isErrorEnabled = false
@@ -169,12 +153,12 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun checkPwdAndConfirmPwd(password: String, confirmPassword: String): Boolean {
-        //todo : check form validation
         return if (password != confirmPassword) {
             binding.layoutForm.tilEmail.isErrorEnabled = true
             binding.layoutForm.tilConfirmPassword.isErrorEnabled = true
-            binding.layoutForm.tilPassword.error = "Password doesn't match"
-            binding.layoutForm.tilConfirmPassword.error = "Password doesn't match"
+            binding.layoutForm.tilPassword.error = getString(R.string.text_password_doesn_t_match)
+            binding.layoutForm.tilConfirmPassword.error =
+                getString(R.string.text_password_doesn_t_match)
             false
         } else {
             binding.layoutForm.tilPassword.isErrorEnabled = false

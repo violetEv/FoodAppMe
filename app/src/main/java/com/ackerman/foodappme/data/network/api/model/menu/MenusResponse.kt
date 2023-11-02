@@ -2,8 +2,9 @@ package com.ackerman.foodappme.data.network.api.model.menu
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
+
 @Keep
-data class MenusResponse (
+data class MenusResponse(
     @SerializedName("code")
     val code: Int?,
     @SerializedName("data")
@@ -12,4 +13,4 @@ data class MenusResponse (
     val message: String?,
     @SerializedName("status")
     val status: Boolean?
-    )
+)

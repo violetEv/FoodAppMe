@@ -1,6 +1,5 @@
 package com.ackerman.foodappme.presentation.feature.detail
 
-
 import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -53,8 +52,4 @@ class DetailViewModel(
             }
         }
     }
-
-
-
-
 }

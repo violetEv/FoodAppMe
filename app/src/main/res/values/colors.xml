@@ -3,9 +3,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="background">#F5FFFB</color>
+    <color name="bg_item">#DDF7E3</color>
     <color name="app_color_primary">#419F7D</color>
     <color name="app_color_on_primary">#61E756</color>
-    <color name="app_color_primary_container">#C7F9CC</color>
+    <color name="app_color_primary_container">#ACDEAA</color>
     <color name="app_color_on_primary_container">#F3C892</color>
 
     <color name="app_color_secondary">#A7FFEB</color>
@@ -13,7 +15,6 @@
     <color name="app_color_secondary_container">#FFFFFF</color>
     <color name="app_color_on_secondary_container">#1B2025</color>
     <color name="transparent">#00FFFFFF</color>
-    <color name="grey_background">#F0F0F0</color>
 
     <color name="app_color_tertiary">#1B2025</color>
     <color name="app_color_on_tertiary">#FFFFFF</color>

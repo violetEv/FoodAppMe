@@ -7,27 +7,19 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.ackerman.foodappme.R
-import com.ackerman.foodappme.data.dummy.DummyCategoryDataSource
-import com.ackerman.foodappme.data.dummy.DummyCategoryDataSourceImpl
 import com.ackerman.foodappme.data.dummy.DummyMenuDataSource
 import com.ackerman.foodappme.data.dummy.DummyMenuDataSourceImpl
-import com.ackerman.foodappme.data.local.database.AppDatabase
-import com.ackerman.foodappme.data.network.api.datasource.FoodAppApiDataSource
-import com.ackerman.foodappme.data.network.api.service.FoodAppApiService
-import com.ackerman.foodappme.data.repository.MenuRepository
-import com.ackerman.foodappme.data.repository.MenuRepositoryImpl
 import com.ackerman.foodappme.databinding.FragmentHomeBinding
 import com.ackerman.foodappme.model.Menu
 import com.ackerman.foodappme.presentation.feature.detail.DetailActivity
 import com.ackerman.foodappme.presentation.feature.home.adapter.AdapterLayoutMode
 import com.ackerman.foodappme.presentation.feature.home.adapter.CategoryListAdapter
 import com.ackerman.foodappme.presentation.feature.home.adapter.MenuListAdapter
-import com.ackerman.foodappme.utils.GenericViewModelFactory
+import com.ackerman.foodappme.presentation.feature.settings.SettingsDialogFragment
 import com.ackerman.foodappme.utils.proceedWhen
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -50,15 +42,11 @@ class HomeFragment : Fragment() {
         DetailActivity.startActivity(requireContext(), menu)
     }
 
-    private val viewModel: HomeViewModel by viewModels() {
-        val service = FoodAppApiService.invoke()
-        val dataSource = FoodAppApiDataSource(service)
-        val repo: MenuRepository = MenuRepositoryImpl(dataSource)
-        GenericViewModelFactory.create(HomeViewModel(repo))
-    }
+    private val viewModel: HomeViewModel by viewModel()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -71,6 +59,19 @@ class HomeFragment : Fragment() {
         setupSwitch()
         getData()
         observeData()
+        showUserData()
+        setClickListener()
+    }
+
+    private fun setClickListener() {
+        binding.ivMore.setOnClickListener {
+            Toast.makeText(requireContext(), "Setting Opened", Toast.LENGTH_SHORT).show()
+            openSettingDialog()
+        }
+    }
+
+    private fun openSettingDialog() {
+        SettingsDialogFragment().show(childFragmentManager, null)
     }
 
     private fun getData() {
@@ -79,7 +80,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun observeData() {
-        viewModel.categories.observe(viewLifecycleOwner){
+        viewModel.categories.observe(viewLifecycleOwner) {
             it.proceedWhen(doOnSuccess = {
                 binding.layoutStateCategory.root.isVisible = false
                 binding.layoutStateCategory.pbLoading.isVisible = false
@@ -91,19 +92,18 @@ class HomeFragment : Fragment() {
                 }
                 it.payload?.let { data -> adapterCategory.submitData(data) }
             }, doOnLoading = {
-                binding.layoutStateCategory.root.isVisible = true
-                binding.layoutStateCategory.pbLoading.isVisible = true
-                binding.layoutStateCategory.tvError.isVisible = false
-                binding.rvCategory.isVisible = false
-            }, doOnError = {
-                binding.layoutStateCategory.root.isVisible = true
-                binding.layoutStateCategory.pbLoading.isVisible = false
-                binding.layoutStateCategory.tvError.isVisible = true
-                binding.layoutStateCategory.tvError.text = it.exception?.message.orEmpty()
-                binding.rvCategory.isVisible = false
-            })
+                    binding.layoutStateCategory.root.isVisible = true
+                    binding.layoutStateCategory.pbLoading.isVisible = true
+                    binding.layoutStateCategory.tvError.isVisible = false
+                    binding.rvCategory.isVisible = false
+                }, doOnError = {
+                    binding.layoutStateCategory.root.isVisible = true
+                    binding.layoutStateCategory.pbLoading.isVisible = false
+                    binding.layoutStateCategory.tvError.isVisible = true
+                    binding.layoutStateCategory.tvError.text = it.exception?.message.orEmpty()
+                    binding.rvCategory.isVisible = false
+                })
         }
-
 
         viewModel.menus.observe(viewLifecycleOwner) {
             it.proceedWhen(doOnSuccess = {
@@ -114,25 +114,24 @@ class HomeFragment : Fragment() {
                     isVisible = true
                     adapter = adapterMenu
                 }
-                it.payload?.let { data-> adapterMenu.submitData(data) }
+                it.payload?.let { data -> adapterMenu.submitData(data) }
             }, doOnLoading = {
-                binding.layoutState.root.isVisible = true
-                binding.layoutState.pbLoading.isVisible = true
-                binding.layoutState.tvError.isVisible = false
-                binding.rvListMenu.isVisible = false
-            }, doOnError = { err ->
-                binding.layoutState.root.isVisible = true
-                binding.layoutState.pbLoading.isVisible = false
-                binding.layoutState.tvError.isVisible = true
-                binding.layoutState.tvError.text = err.exception?.message.orEmpty()
-                binding.rvListMenu.isVisible = false
-            }, doOnEmpty = {
-                binding.layoutState.root.isVisible = true
-                binding.layoutState.pbLoading.isVisible = false
-                binding.layoutState.tvError.isVisible = true
-                binding.layoutState.tvError.text = getString(R.string.text_cart_is_empty)
-            }
-            )
+                    binding.layoutState.root.isVisible = true
+                    binding.layoutState.pbLoading.isVisible = true
+                    binding.layoutState.tvError.isVisible = false
+                    binding.rvListMenu.isVisible = false
+                }, doOnError = { err ->
+                    binding.layoutState.root.isVisible = true
+                    binding.layoutState.pbLoading.isVisible = false
+                    binding.layoutState.tvError.isVisible = true
+                    binding.layoutState.tvError.text = err.exception?.message.orEmpty()
+                    binding.rvListMenu.isVisible = false
+                }, doOnEmpty = {
+                    binding.layoutState.root.isVisible = true
+                    binding.layoutState.pbLoading.isVisible = false
+                    binding.layoutState.tvError.isVisible = true
+                    binding.layoutState.tvError.text = getString(R.string.text_cart_is_empty)
+                })
         }
     }
 
@@ -148,18 +147,27 @@ class HomeFragment : Fragment() {
     private fun setupSwitch() {
         binding.ivListMode.setOnClickListener() {
             val layoutMode =
-                if (adapterMenu.adapterLayoutMode == AdapterLayoutMode.LINEAR) AdapterLayoutMode.GRID
-                else AdapterLayoutMode.LINEAR
+                if (adapterMenu.adapterLayoutMode == AdapterLayoutMode.LINEAR) {
+                    AdapterLayoutMode.GRID
+                } else {
+                    AdapterLayoutMode.LINEAR
+                }
             val newSpanCount = if (layoutMode == AdapterLayoutMode.GRID) 2 else 1
 
             adapterMenu.adapterLayoutMode = layoutMode
             (binding.rvListMenu.layoutManager as GridLayoutManager).spanCount = newSpanCount
-
             val iconMode =
-                if (layoutMode == AdapterLayoutMode.GRID) R.drawable.ic_list
-                else R.drawable.ic_grid
+                if (layoutMode == AdapterLayoutMode.GRID) {
+                    R.drawable.ic_list
+                } else {
+                    R.drawable.ic_grid
+                }
             binding.ivListMode.setImageResource(iconMode)
         }
     }
-}
 
+    private fun showUserData() {
+        val currentUser = viewModel.getCurrentUser()?.fullName
+        binding.tvGreeting.text = getString(R.string.text_hi, currentUser)
+    }
+}

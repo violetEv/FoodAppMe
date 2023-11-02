@@ -43,6 +43,6 @@ class DummyCategoryDataSourceImpl() : DummyCategoryDataSource {
                 name = "Cake",
                 slug = "cake",
                 imgCategoryUrl = "https://raw.githubusercontent.com/violetEv/CH4-asset-code-challenge/main/categories/ic_category_cake.png"
-            ),
+            )
         )
 }
