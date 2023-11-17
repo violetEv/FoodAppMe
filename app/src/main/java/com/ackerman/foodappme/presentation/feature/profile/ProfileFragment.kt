@@ -75,6 +75,7 @@ class ProfileFragment : Fragment() {
         binding.layoutForm.etName.setText(viewModel.getCurrentUser()?.fullName)
         binding.layoutForm.etEmail.setText(viewModel.getCurrentUser()?.email)
         binding.layoutForm.tilEmail.isEnabled = false
+        binding.layoutForm.tilName.isEnabled = false
     }
 
     private fun setupForm() {

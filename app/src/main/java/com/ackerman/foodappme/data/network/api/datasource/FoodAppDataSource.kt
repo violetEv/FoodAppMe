@@ -14,7 +14,7 @@ interface FoodAppDataSource {
 
 class FoodAppApiDataSource(private val service: FoodAppApiService) : FoodAppDataSource {
     override suspend fun getMenus(category: String?): MenusResponse {
-        return service.getProducts(category)
+        return service.getMenus(category)
     }
 
     override suspend fun getCategories(): CategoriesResponse {

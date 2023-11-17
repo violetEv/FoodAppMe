@@ -83,17 +83,20 @@ class CartFragment : Fragment() {
                     adapter.submitData(carts)
                     binding.tvTotalPrice.text = totalPrice.toCurrencyFormat()
                 }
+                binding.cvSectionCheckout.isVisible = true
             }, doOnLoading = {
                     binding.layoutState.root.isVisible = true
                     binding.layoutState.pbLoading.isVisible = true
                     binding.layoutState.tvError.isVisible = false
                     binding.rvCart.isVisible = false
+                    binding.cvSectionCheckout.isVisible = false
                 }, doOnError = { err ->
                     binding.layoutState.root.isVisible = true
                     binding.layoutState.pbLoading.isVisible = false
                     binding.layoutState.tvError.isVisible = true
                     binding.layoutState.tvError.text = err.exception?.message.orEmpty()
                     binding.rvCart.isVisible = false
+                    binding.cvSectionCheckout.isVisible = false
                 }, doOnEmpty = { data ->
                     binding.layoutState.root.isVisible = true
                     binding.layoutState.pbLoading.isVisible = false
@@ -103,6 +106,7 @@ class CartFragment : Fragment() {
                         binding.tvTotalPrice.text = totalPrice.toCurrencyFormat()
                     }
                     binding.rvCart.isVisible = false
+                    binding.cvSectionCheckout.isVisible = false
                 })
         }
     }
