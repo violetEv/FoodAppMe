@@ -56,7 +56,7 @@ fun <T> proceedFlow(block: suspend () -> T): Flow<ResultWrapper<T>> {
             }
         )
     }.catch { e ->
-        ResultWrapper.Error<T>(exception = Exception(e))
+        emit(ResultWrapper.Error(exception = Exception(e)))
     }.onStart {
         emit(ResultWrapper.Loading())
     }

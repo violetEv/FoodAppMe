@@ -75,7 +75,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun getData() {
-        viewModel.getCategories()
+        viewModel.categories
         viewModel.getMenus()
     }
 

@@ -3,10 +3,10 @@ package com.ackerman.foodappme.presentation.feature.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.ackerman.foodappme.data.repository.MenuRepository
 import com.ackerman.foodappme.data.repository.UserRepository
-import com.ackerman.foodappme.model.Category
 import com.ackerman.foodappme.model.Menu
 import com.ackerman.foodappme.utils.ResultWrapper
 import kotlinx.coroutines.Dispatchers
@@ -14,21 +14,10 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(private val repository: MenuRepository, val repo: UserRepository) :
     ViewModel() {
-    private val _categories = MutableLiveData<ResultWrapper<List<Category>>>()
-    val categories: LiveData<ResultWrapper<List<Category>>>
-        get() = _categories
-
+    val categories = repository.getCategories().asLiveData(Dispatchers.IO)
     private val _menus = MutableLiveData<ResultWrapper<List<Menu>>>()
     val menus: LiveData<ResultWrapper<List<Menu>>>
         get() = _menus
-
-    fun getCategories() {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.getCategories().collect {
-                _categories.postValue(it)
-            }
-        }
-    }
 
     fun getCurrentUser() = repo.getCurrentUser()
 

@@ -85,7 +85,7 @@ class EditProfileActivity : AppCompatActivity() {
 
     private fun navigateToProfile() {
         val intent = Intent(this, ProfileFragment::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
         startActivity(intent)
     }
